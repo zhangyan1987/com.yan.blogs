@@ -1,101 +1,334 @@
+堆排序：主要包括建堆，交换堆底合堆顶元素，对堆进行调整几个主要过程。
+下面是三种实现。
+
+实现 1（依据算法导论上伪代码）：
+
 package com.yan.algorithms;
 
 import java.util.Random;
+
 /**
  * 本堆排序算法采用对最大堆进行堆排序
+ * 
  * @author jacobzhang
- *
+ * 
  */
 public class HeapSort {
 
-	
-	
 	public static void main(String args[]) {
-		
+
 		Comparable[] a = new Comparable[100];
 		Random r = new Random();
-		for(int i=0;i<100;i++)
+		for (int i = 0; i < 100; i++)
 			a[i] = r.nextInt(100);
-		sort(new String[]{"22","11","33"});
+		sort(new Comparable[] { 16, 14, 10, 8, 7, 9, 3, 2, 4, 1 });
 	}
-	
-	public  static void sort(Comparable a[]) {
-		Comparable [] store = new Comparable[a.length];
+
+	public static void sort(Comparable a[]) {
+		Comparable[] store = new Comparable[a.length];
 		int index = 0;
-		//建堆
+		// 建堆
 		build_heap(a);
-		
-		for(int j = a.length-1;j>=0;j--) {
+
+		for (int j = a.length - 1; j >= 0; j--) {
 			store[index++] = a[0];
-			//交换堆顶元素和堆底最后一个元素
-			exch(a,j,0);
-			//删除堆底元素，元素个数-1
-			Comparable[] b = new Comparable[a.length-1];
-			System.arraycopy( a, 0, b, 0,a.length-1);
+			// 交换堆顶元素和堆底最后一个元素
+			exch(a, j, 0);
+			// 删除堆底元素，元素个数-1
+			Comparable[] b = new Comparable[a.length - 1];
+			System.arraycopy(a, 0, b, 0, a.length - 1);
 			a = b;
-			//对堆重新进行调整
-			heap_balance(a,0);
+			// 对堆重新进行调整
+			heap_balance(a, 0);
 		}
-		//打印排序结果
-		for(Comparable c:store)
+		// 打印排序结果
+		for (Comparable c : store)
 			System.out.println(c);
-		
+
 	}
-	//建堆
+
+	// 建堆
 	private static void build_heap(Comparable a[]) {
 		int len = a.length;
-		//假设数组中元素已组成一个堆，但现在的堆不满足最大堆的性质，需要调整，保证每个三个元素组成的子堆都满足最大堆的性质。
-		//数组下标从0开始,下标为len/2-1到0的节点都有孩子节点
-		for(int i = len/2-1 ;i>=0;i-- ) {
-			heap_balance(a,i);
-			
+		// 假设数组中元素已组成一个堆，但现在的堆不满足最大堆的性质，需要调整，保证每个三个元素组成的子堆都满足最大堆的性质。
+		// 数组下标从0开始,下标为len/2-1到0的节点都有孩子节点
+		for (int i = len / 2 - 1; i >= 0; i--) {
+			heap_balance(a, i);
+
 		}
-		
+
 	}
-	
-	
-	
-	//对堆进行调整，使其满足最大堆的性质
-	private static void heap_balance(Comparable a[] ,int index) {
-		
+
+	// 对堆进行调整，使其满足最大堆的性质
+	private static void heap_balance(Comparable a[], int index) {
+
 		int largest = index;
-		
-		if(leftChildIndex(index) < a.length && leftChild(a,index).compareTo(a[index]) > 0) 
+
+		if (leftChildIndex(index) < a.length
+				&& leftChild(a, index).compareTo(a[index]) > 0)
 			largest = leftChildIndex(index);
-		if(rightChildIndex(index) < a.length && rightChild(a,index).compareTo(a[largest]) > 0) 
+		if (rightChildIndex(index) < a.length
+				&& rightChild(a, index).compareTo(a[largest]) > 0)
 			largest = rightChildIndex(index);
-		
-		if(largest != index) {
-			exch(a,largest,index);
-			heap_balance(a,largest);
+
+		if (largest != index) {
+			exch(a, largest, index);
+			heap_balance(a, largest);
 		}
 	}
-	
-	private static void exch(Comparable a[],int p,int q){
+
+	private static void exch(Comparable a[], int p, int q) {
 		Comparable temp = a[p];
 		a[p] = a[q];
 		a[q] = temp;
 	}
-	
-	//获得左孩子节点
-	private static Comparable leftChild(Comparable[] a,int index) {
-		return a[2*index+1];
+
+	// 获得左孩子节点
+	private static Comparable leftChild(Comparable[] a, int index) {
+		return a[2 * index + 1];
 	}
-	//获得左孩子节点的下标
+
+	// 获得左孩子节点的下标
 	private static int leftChildIndex(int index) {
-		return 2*index+1;
+		return 2 * index + 1;
 	}
-	//获得右孩子节点
-	private static Comparable rightChild(Comparable[] a,int index) {
-		return a[2*index+2];
+
+	// 获得右孩子节点
+	private static Comparable rightChild(Comparable[] a, int index) {
+		return a[2 * index + 2];
 	}
-	//获得右孩子节点的下标
+
+	// 获得右孩子节点的下标
 	private static int rightChildIndex(int index) {
-		return 2*index+2;
+		return 2 * index + 2;
 	}
-	//获得父亲节点
-	
-	private static Comparable parent(Comparable[] a,int index) {
-		return a[(index-1)/2];
+
+	// 获得父亲节点
+
+	private static Comparable parent(Comparable[] a, int index) {
+		return a[(index - 1) / 2];
 	}
 }
+
+
+实现2（受《算法》4的启发，对实现1的改进）:
+
+
+package com.yan.algorithms;
+
+import java.util.Random;
+
+/**
+ * 本堆排序算法采用对最大堆进行堆排序
+ * 
+ * @author jacobzhang
+ * 
+ */
+public class HeapSort2 {
+
+	public static void main(String args[]) {
+
+		Comparable[] a = new Comparable[100];
+		Random r = new Random();
+		for (int i = 0; i < 100; i++)
+			a[i] = r.nextInt(100);
+		// sort(new Comparable[]{16,14,10,8,7,9,3,2,4,1});
+		sort(a);
+	}
+
+	public static void sort(Comparable a[]) {
+		int heap_size = a.length;
+		// 建堆
+		build_heap(a, heap_size);
+
+		for (int j = heap_size - 1; j >= 0; j--) {
+			exch(a, j, 0);
+			// 对堆重新进行调整
+			heap_balance(a, 0, --heap_size);
+		}
+		// 打印排序结果
+		for (Comparable c : a)
+			System.out.println(c);
+
+	}
+
+	// 建堆
+	private static void build_heap(Comparable a[], int heap_size) {
+		int len = heap_size;
+		// 假设数组中元素已组成一个堆，但现在的堆不满足最大堆的性质，需要调整，保证每个三个元素组成的子堆都满足最大堆的性质。
+		// 数组下标从0开始,下标为len/2-1到0的节点都有孩子节点
+		for (int i = len / 2 - 1; i >= 0; i--) {
+			heap_balance(a, i, heap_size);
+
+		}
+
+	}
+
+	// 对堆进行调整，使其满足最大堆的性质
+	private static void heap_balance(Comparable a[], int index, int heap_size) {
+
+		int largest = index;
+
+		if (leftChildIndex(index) < heap_size
+				&& leftChild(a, index).compareTo(a[index]) > 0)
+			largest = leftChildIndex(index);
+		if (rightChildIndex(index) < heap_size
+				&& rightChild(a, index).compareTo(a[largest]) > 0)
+			largest = rightChildIndex(index);
+
+		if (largest != index) {
+			exch(a, largest, index);
+			heap_balance(a, largest, heap_size);
+		}
+	}
+
+	private static void exch(Comparable a[], int p, int q) {
+		Comparable temp = a[p];
+		a[p] = a[q];
+		a[q] = temp;
+	}
+
+	// 获得左孩子节点
+	private static Comparable leftChild(Comparable[] a, int index) {
+		return a[2 * index + 1];
+	}
+
+	// 获得左孩子节点的下标
+	private static int leftChildIndex(int index) {
+		return 2 * index + 1;
+	}
+
+	// 获得右孩子节点
+	private static Comparable rightChild(Comparable[] a, int index) {
+		return a[2 * index + 2];
+	}
+
+	// 获得右孩子节点的下标
+	private static int rightChildIndex(int index) {
+		return 2 * index + 2;
+	}
+
+	// 获得父亲节点
+
+	private static Comparable parent(Comparable[] a, int index) {
+		return a[(index - 1) / 2];
+	}
+}
+
+
+实现3（《算法》4上的实现）:
+
+package com.yan.algorithms;
+
+/*************************************************************************
+ *  Compilation:  javac Heap.java
+ *  Execution:    java Heap < input.txt
+ *  Dependencies: StdOut.java StdIn.java
+ *  Data files:   http://algs4.cs.princeton.edu/24pq/tiny.txt
+ *                http://algs4.cs.princeton.edu/24pq/words3.txt
+ *  
+ *  Sorts a sequence of strings from standard input using heapsort.
+ *
+ *  % more tiny.txt
+ *  S O R T E X A M P L E
+ *
+ *  % java Heap < tiny.txt
+ *  A E E L M O P R S T X                 [ one string per line ]
+ *
+ *  % more words3.txt
+ *  bed bug dad yes zoo ... all bad yet
+ *
+ *  % java Heap < words3.txt
+ *  all bad bed bug dad ... yes yet zoo   [ one string per line ]
+ *
+ *************************************************************************/
+
+/**
+ *  The <tt>Heap</tt> class provides a static methods for heapsorting
+ *  an array.
+ *  <p>
+ *  For additional documentation, see <a href="http://algs4.cs.princeton.edu/24pq">Section 2.4</a> of
+ *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
+ *
+ *  @author Robert Sedgewick
+ *  @author Kevin Wayne
+ */
+public class Heap {
+
+    // This class should not be instantiated.
+    private Heap() { }
+
+    /**
+     * Rearranges the array in ascending order, using the natural order.
+     * @param pq the array to be sorted
+     */
+    public static void sort(Comparable[] pq) {
+        int N = pq.length;
+        
+        //build heap
+        for (int k = N/2; k >= 1; k--)
+            sink(pq, k, N);
+        
+        while (N > 1) {
+        	//交换堆顶和堆底
+            exch(pq, 1, N--);
+            //重新调整堆
+            sink(pq, 1, N);
+        }
+    }
+
+   /***********************************************************************
+    * Helper functions to restore the heap invariant.
+    **********************************************************************/
+    
+    private static void sink(Comparable[] pq, int k, int N) {
+        while (2*k <= N) {
+            int j = 2*k;
+            if (j < N && less(pq, j, j+1)) j++;
+            if (!less(pq, k, j)) break;
+            exch(pq, k, j);
+            k = j;
+        }
+    }
+
+   /***********************************************************************
+    * Helper functions for comparisons and swaps.
+    * Indices are "off-by-one" to support 1-based indexing.
+    **********************************************************************/
+    private static boolean less(Comparable[] pq, int i, int j) {
+        return pq[i-1].compareTo(pq[j-1]) < 0;
+    }
+
+    private static void exch(Object[] pq, int i, int j) {
+        Object swap = pq[i-1];
+        pq[i-1] = pq[j-1];
+        pq[j-1] = swap;
+    }
+
+    // is v < w ?
+    private static boolean less(Comparable v, Comparable w) {
+        return (v.compareTo(w) < 0);
+    }
+        
+
+   /***********************************************************************
+    *  Check if array is sorted - useful for debugging
+    ***********************************************************************/
+    private static boolean isSorted(Comparable[] a) {
+        for (int i = 1; i < a.length; i++)
+            if (less(a[i], a[i-1])) return false;
+        return true;
+    }
+
+
+    // print array to standard output
+    private static void show(Comparable[] a) {
+        for (int i = 0; i < a.length; i++) {
+            System.out.println(a[i]);
+        }
+    }
+
+    
+}
+
+
