@@ -1,0 +1,72 @@
+package com.yan.algorithms;
+
+import java.util.Random;
+
+public class HeapSort {
+
+	private static Comparable [] store;
+	private static int index;
+	
+	public static void main(String args[]) {
+		
+		Comparable[] a = new Comparable[100];
+		Random r = new Random();
+		for(int i=0;i<100;i++)
+			a[i] = r.nextInt(100);
+		sort(a);
+	}
+	
+	public static  void sort(Comparable a[]) {
+		store = new Comparable[a.length];
+		index = 0;
+		build_heap(a);
+		for(int j = a.length-1;j>=0;j--) {
+			store[index++] = a[0];
+			exch(a,j,0);
+			
+			Comparable[] b = new Comparable[a.length-1];
+			System.arraycopy( a, 0, b, 0,a.length-1);
+			a = b;
+			heap_balance(a,0);
+		}
+		for(Comparable c:store)
+			System.out.println(c);
+		
+	}
+	
+	private static void build_heap(Comparable a[]) {
+		int len = a.length;
+		
+		for(int i = len/2-1 ;i>=0;i-- ) {
+			heap_balance(a,i);
+			
+		}
+		
+	}
+	
+	
+	
+	
+	private static void heap_balance(Comparable a[] ,int index) {
+		
+		int largest = index;
+		
+		if(2*index+1 < a.length && a[2*index+1].compareTo(a[index]) > 0) 
+			largest = 2*index+1;
+		if((2*index+2) < a.length && a[2*index+2].compareTo(a[largest]) > 0) 
+			largest = 2*index + 2;
+		
+		if(largest != index) {
+			exch(a,largest,index);
+			heap_balance(a,largest);
+		}
+	}
+	
+	private static void exch(Comparable a[],int p,int q){
+		Comparable temp = a[p];
+		a[p] = a[q];
+		a[q] = temp;
+	}
+	
+	
+}
