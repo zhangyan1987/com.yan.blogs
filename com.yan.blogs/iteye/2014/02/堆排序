@@ -1,11 +1,14 @@
 package com.yan.algorithms;
 
 import java.util.Random;
-
+/**
+ * 本堆排序算法采用对最大堆进行堆排序
+ * @author jacobzhang
+ *
+ */
 public class HeapSort {
 
-	private static Comparable [] store;
-	private static int index;
+	
 	
 	public static void main(String args[]) {
 		
@@ -13,30 +16,36 @@ public class HeapSort {
 		Random r = new Random();
 		for(int i=0;i<100;i++)
 			a[i] = r.nextInt(100);
-		sort(a);
+		sort(new String[]{"22","11","33"});
 	}
 	
-	public static  void sort(Comparable a[]) {
-		store = new Comparable[a.length];
-		index = 0;
+	public  static void sort(Comparable a[]) {
+		Comparable [] store = new Comparable[a.length];
+		int index = 0;
+		//建堆
 		build_heap(a);
+		
 		for(int j = a.length-1;j>=0;j--) {
 			store[index++] = a[0];
+			//交换堆顶元素和堆底最后一个元素
 			exch(a,j,0);
-			
+			//删除堆底元素，元素个数-1
 			Comparable[] b = new Comparable[a.length-1];
 			System.arraycopy( a, 0, b, 0,a.length-1);
 			a = b;
+			//对堆重新进行调整
 			heap_balance(a,0);
 		}
+		//打印排序结果
 		for(Comparable c:store)
 			System.out.println(c);
 		
 	}
-	
+	//建堆
 	private static void build_heap(Comparable a[]) {
 		int len = a.length;
-		
+		//假设数组中元素已组成一个堆，但现在的堆不满足最大堆的性质，需要调整，保证每个三个元素组成的子堆都满足最大堆的性质。
+		//数组下标从0开始,下标为len/2-1到0的节点都有孩子节点
 		for(int i = len/2-1 ;i>=0;i-- ) {
 			heap_balance(a,i);
 			
@@ -46,15 +55,15 @@ public class HeapSort {
 	
 	
 	
-	
+	//对堆进行调整，使其满足最大堆的性质
 	private static void heap_balance(Comparable a[] ,int index) {
 		
 		int largest = index;
 		
-		if(2*index+1 < a.length && a[2*index+1].compareTo(a[index]) > 0) 
-			largest = 2*index+1;
-		if((2*index+2) < a.length && a[2*index+2].compareTo(a[largest]) > 0) 
-			largest = 2*index + 2;
+		if(leftChildIndex(index) < a.length && leftChild(a,index).compareTo(a[index]) > 0) 
+			largest = leftChildIndex(index);
+		if(rightChildIndex(index) < a.length && rightChild(a,index).compareTo(a[largest]) > 0) 
+			largest = rightChildIndex(index);
 		
 		if(largest != index) {
 			exch(a,largest,index);
@@ -68,5 +77,25 @@ public class HeapSort {
 		a[q] = temp;
 	}
 	
+	//获得左孩子节点
+	private static Comparable leftChild(Comparable[] a,int index) {
+		return a[2*index+1];
+	}
+	//获得左孩子节点的下标
+	private static int leftChildIndex(int index) {
+		return 2*index+1;
+	}
+	//获得右孩子节点
+	private static Comparable rightChild(Comparable[] a,int index) {
+		return a[2*index+2];
+	}
+	//获得右孩子节点的下标
+	private static int rightChildIndex(int index) {
+		return 2*index+2;
+	}
+	//获得父亲节点
 	
+	private static Comparable parent(Comparable[] a,int index) {
+		return a[(index-1)/2];
+	}
 }
