@@ -1,0 +1,29 @@
+
+1. 问题描述
+   插件开发中资源文件定位，例如资源文件的相对路径为：XX/XX/XX.xml，如何在插件中定位到对应的资源文件。
+   然而，传统通过classpath得到文件路径的方式当plugin被打包后失效。
+   String xxx = ResourceLoader.class.getClassLoader().getResource("").getPath();
+
+
+2. 解决方法
+
+使用 eclispe提供的工具类BundleUtility的find方法，该方法有两个参数，第一个为plugin的id字符串，第二个参数为资源文件的相对路径。
+ 然后通过FileLocator的toFileURL方法即可得到资源文件的绝对路径。
+
+private static String getAbsolutePath(String relativePath){
+	@SuppressWarnings("restriction")
+	URL fullPathString = BundleUtility.find(Activator.PLUGIN_ID, relativePath);
+if (fullPathString == null) {
+    try {
+        fullPathString = new URL(relativePath);
+    } catch (MalformedURLException e) {
+    	return null;
+    }
+}
+try {
+	return FileLocator.toFileURL(fullPathString).getPath();
+	} catch (IOException e) {
+		e.printStackTrace();
+		return null;
+	}
+}
