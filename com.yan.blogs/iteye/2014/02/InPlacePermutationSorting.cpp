@@ -1,7 +1,6 @@
 //In-Place Permutation Sorting
 
-/*solve the problem of sorting numbers in the
-range 0 to n^3 in O(n) time*/
+/*solve the problem of sorting numbers in the range 0 to n^3 in O(n) time*/
 
 
 
